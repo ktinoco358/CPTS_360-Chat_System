@@ -13,6 +13,20 @@
 
 <body>
 
+<div id="loginSection" class="container mt-3">
+  <div class="row justify-content-center">
+    <div class="col-6">
+      <h4 class="mb-3">Login</h4>
+      <div class="input-group">
+        <input type="text" id="usernameInput" class="form-control" placeholder="Enter username">
+        <button class="btn btn-primary" id="loginBtn">Login</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="chatSection" style="display: none;">
+
     <!--This is all done through bootstrap please dont remove comments if you use AI make sure to tell it to keep them -->
 <div class="container-fluid">
     <div class="row">
@@ -32,7 +46,10 @@
 
             <!-- Header -->
             <div class="p-3 border-bottom bg-white">
-                <h5 id="chatHeader">Andres</h5>
+
+            <h5 id="chatHeader">Andres</h5>
+            <small id="typingIndicator" class="text-muted"></small>
+
             </div>
 
             <!-- Messages -->
@@ -42,14 +59,14 @@
             <div class="p-3 border-top bg-white">
                 <div class="input-group">
                     <input type="text" id="messageInput" class="form-control" placeholder="Type a message...">
-                    <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+                    <button class="btn btn-primary" id="sendBtn">Send</button>
                 </div>
             </div>
 
         </div>
     </div>
 </div>
-
+</div>
 <!-- Your JS -->
 <script src="style.js"></script>
 

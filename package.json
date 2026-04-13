@@ -1,0 +1,12 @@
+{
+  "name": "cpts360-chat-system",
+  "version": "1.0.0",
+  "description": "Socket server for CPTS 360 chat system",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
