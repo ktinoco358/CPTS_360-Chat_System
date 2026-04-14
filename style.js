@@ -19,6 +19,7 @@ function connectSocket() {
         currentUser = data.username;
         document.getElementById("loginSection").style.display = "none";
         document.getElementById("chatSection").style.display = "block";
+        document.getElementById("currentUserDisplay").innerText = "Welcome, " + currentUser;
         break;
 
       case "active_users":
