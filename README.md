@@ -8,7 +8,7 @@ Karen
 Arni
 
 How to run??
-1. open a terminal
+1. open a terminal and cd to project folder location
 2. npm install
 3. npm start
-4. click the localhost link 
+4. open http://localhost:3000/ in browser
