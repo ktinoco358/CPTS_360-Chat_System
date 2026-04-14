@@ -6,3 +6,9 @@ TEAM:
 Andres
 Karen
 Arni
+
+How to run??
+1. open a terminal
+2. npm install
+3. npm start
+4. click the localhost link 

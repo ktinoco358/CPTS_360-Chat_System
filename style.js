@@ -1,13 +1,8 @@
 let socket = null;
 let currentUser = null;
 let currentChat = "Andres";
-let chats = {
-  "Andres": [],
-  "Karen": [],
-  "Arni": []
-};
+let messages = {};
 
-// Connect to backend socket
 function connectSocket() {
   socket = new WebSocket("ws://localhost:3000");
 
@@ -19,6 +14,7 @@ function connectSocket() {
     const data = JSON.parse(event.data);
 
     switch (data.type) {
+
       case "login_success":
         currentUser = data.username;
         document.getElementById("loginSection").style.display = "none";
@@ -27,21 +23,34 @@ function connectSocket() {
 
       case "active_users":
         renderUserList(data.users);
+
+        const otherUsers = data.users.filter(u => u !== currentUser);
+
+        if (otherUsers.length > 0) {
+          currentChat = otherUsers[0];
+          
+          socket.send(JSON.stringify({
+          type: "chat_history",
+          user: currentChat
+        }));
+        }
+
         break;
 
       case "private_message": {
-        const otherUser = data.from === currentUser ? data.to : data.from;
+        const isMe = data.from === currentUser;
+        const chatPartner = isMe ? data.to : data.from;
 
-        if (!chats[otherUser]) {
-          chats[otherUser] = [];
+        if (!messages[chatPartner]) {
+          messages[chatPartner] = [];
         }
 
-        chats[otherUser].push({
-          text: `${data.from}: ${data.text}`,
-          type: data.messageType
+        messages[chatPartner].push({
+          text: `${isMe ? "You" : data.from}: ${data.text}`,
+          type: isMe ? "sent" : "received"
         });
 
-        if (currentChat === otherUser) {
+        if (currentChat === chatPartner) {
           renderMessages();
         }
 
@@ -59,6 +68,22 @@ function connectSocket() {
         }
         break;
 
+      case "chat_history":
+        currentChat = data.user;
+    
+        messages[currentChat] = data.messages.map(m => {
+          const isMe = m.sender === currentUser;
+
+          return {
+            text: `${isMe ? "You" : m.sender}: ${m.message}`,
+            type: isMe ? "sent" : "received"
+          };
+        });
+
+        document.getElementById("chatHeader").innerText = currentChat;
+        renderMessages();
+        break;
+
       case "error":
         alert(data.message);
         break;
@@ -70,7 +95,6 @@ function connectSocket() {
   };
 }
 
-// Login
 function login() {
   const username = document.getElementById("usernameInput").value.trim();
 
@@ -82,17 +106,12 @@ function login() {
   }));
 }
 
-// Rebuild sidebar from active users
 function renderUserList(users) {
   const chatList = document.getElementById("chatList");
   chatList.innerHTML = "";
 
   users.forEach((user) => {
     if (user === currentUser) return;
-
-    if (!chats[user]) {
-      chats[user] = [];
-    }
 
     const li = document.createElement("li");
     li.className = "list-group-item";
@@ -110,8 +129,8 @@ function renderUserList(users) {
     chatList.appendChild(li);
   });
 
-  // if current chat disappeared, pick first online user if possible
   const remainingUsers = users.filter(user => user !== currentUser);
+
   if (!remainingUsers.includes(currentChat) && remainingUsers.length > 0) {
     currentChat = remainingUsers[0];
     document.getElementById("chatHeader").innerText = currentChat;
@@ -119,7 +138,6 @@ function renderUserList(users) {
   }
 }
 
-// Switch chat
 function selectChat(element) {
   const name = element.getAttribute("data-name");
   currentChat = name;
@@ -131,19 +149,20 @@ function selectChat(element) {
   });
 
   element.classList.add("active");
-  renderMessages();
+
+  socket.send(JSON.stringify({
+    type: "chat_history",
+    user: name
+  }));
 }
 
-// Render messages
 function renderMessages() {
   const container = document.getElementById("messages");
   container.innerHTML = "";
 
-  if (!chats[currentChat]) {
-    chats[currentChat] = [];
-  }
+  const chatMessages = messages[currentChat] || [];
 
-  chats[currentChat].forEach(msg => {
+  chatMessages.forEach(msg => {
     const div = document.createElement("div");
     div.classList.add("message", msg.type);
     div.innerText = msg.text;
@@ -153,7 +172,6 @@ function renderMessages() {
   container.scrollTop = container.scrollHeight;
 }
 
-// Send message
 function sendMessage() {
   const input = document.getElementById("messageInput");
   const text = input.value.trim();
@@ -169,7 +187,6 @@ function sendMessage() {
   input.value = "";
 }
 
-// Typing indicator
 function sendTyping() {
   if (!currentChat) return;
 
@@ -196,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const input = document.getElementById("messageInput");
-  input.addEventListener("keydown", function(e) {
+  input.addEventListener("keydown", function (e) {
     if (e.key === "Enter") {
       sendMessage();
     } else {
@@ -204,7 +221,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // keep existing initial render behavior
   document.getElementById("chatHeader").innerText = currentChat;
   renderMessages();
 });

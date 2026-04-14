@@ -2,6 +2,21 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const WebSocket = require("ws");
+// Data base initialization
+const Database = require("better-sqlite3");
+//const { use } = require("react");
+const db = new Database("chat.db");
+
+// Create users table if it doesn't exist
+db.prepare(`
+CREATE TABLE IF NOT EXISTS messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  sender TEXT,
+  receiver TEXT,
+  message TEXT,
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+)
+`).run();
 
 const PORT = 3000;
 
@@ -96,6 +111,27 @@ wss.on("connection", (ws) => {
           username: username
         });
 
+        // below it will load old messages
+        const users = [...clients.keys()].filter(u => u !== username);
+
+        if (users.length > 0) {
+          const firstUser = users[0];
+
+          const rows = db.prepare(`
+            SELECT * FROM messages
+            WHERE (sender = ? AND receiver = ?)
+              OR (sender = ? AND receiver = ?)
+            ORDER BY timestamp ASC
+          `).all(username, firstUser, firstUser, username);
+
+          sendJSON(ws, {
+            type: "chat_history",
+            user: firstUser,
+            messages: rows
+          });
+        }
+
+
         broadcastActiveUsers();
         break;
       }
@@ -127,6 +163,12 @@ wss.on("connection", (ws) => {
           text: text
         };
 
+        // Save message to database
+        db.prepare(`
+        INSERT INTO messages (sender, receiver, message)
+        VALUES (?, ?, ?)
+        `).run(ws.username, to, text);
+
         // send to recipient if online
         if (clients.has(to)) {
           sendJSON(clients.get(to), {
@@ -153,6 +195,26 @@ wss.on("connection", (ws) => {
         sendJSON(clients.get(to), {
           type: "typing",
           from: ws.username
+        });
+
+        break;
+      }
+
+      case "chat_history": {
+        const user1 = ws.username;
+        const user2 = data.user;
+
+        const rows = db.prepare(`
+          SELECT * FROM messages
+          WHERE (sender = ? AND receiver = ?)
+            OR (sender = ? AND receiver = ?)
+          ORDER BY timestamp ASC
+        `).all(user1, user2, user2, user1);
+
+        sendJSON(ws, {
+          type: "chat_history",
+          user: user2,
+          messages: rows
         });
 
         break;
