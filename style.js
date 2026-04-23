@@ -1,7 +1,9 @@
 let socket = null;
 let currentUser = null;
-let currentChat = "Andres";
-let messages = {};
+let currentChat = "Global Chat";
+let messages = {
+  "Global Chat": []
+};
 
 function connectSocket() {
   socket = new WebSocket("ws://localhost:3000");
@@ -20,6 +22,13 @@ function connectSocket() {
         document.getElementById("loginSection").style.display = "none";
         document.getElementById("chatSection").style.display = "block";
         document.getElementById("currentUserDisplay").innerText = "Welcome, " + currentUser;
+
+        currentChat = "Global Chat";
+        document.getElementById("chatHeader").innerText = "Global Chat";
+
+        socket.send(JSON.stringify({
+          type: "global_history"
+        }));
         break;
 
       case "active_users":
@@ -58,6 +67,25 @@ function connectSocket() {
         break;
       }
 
+      case "global_message": {
+        if (!messages["Global Chat"]) {
+          messages["Global Chat"] = [];
+        }
+
+        const isMe = data.from === currentUser;
+
+        messages["Global Chat"].push({
+          text: `${isMe ? "You" : data.from}: ${data.text}`,
+          type: isMe ? "sent" : "received"
+        });
+
+        if (currentChat === "Global Chat") {
+          renderMessages();
+        }
+
+        break;
+      }
+
       case "typing":
         if (currentChat === data.from) {
           const typingIndicator = document.getElementById("typingIndicator");
@@ -82,6 +110,22 @@ function connectSocket() {
         });
 
         document.getElementById("chatHeader").innerText = currentChat;
+        renderMessages();
+        break;
+
+      case "global_history":
+        currentChat = "Global Chat";
+
+        messages["Global Chat"] = data.messages.map(m => {
+          const isMe = m.sender === currentUser;
+
+          return {
+            text: `${isMe ? "You" : m.sender}: ${m.message}`,
+            type: isMe ? "sent" : "received"
+          };
+        });
+
+        document.getElementById("chatHeader").innerText = "Global Chat";
         renderMessages();
         break;
 
@@ -111,6 +155,21 @@ function renderUserList(users) {
   const chatList = document.getElementById("chatList");
   chatList.innerHTML = "";
 
+  const globalLi = document.createElement("li");
+  globalLi.className = "list-group-item";
+  globalLi.setAttribute("data-name", "Global Chat");
+  globalLi.innerText = "Global Chat";
+
+  if (currentChat === "Global Chat") {
+    globalLi.classList.add("active");
+  }
+
+  globalLi.addEventListener("click", function () {
+    selectChat(this);
+  });
+
+  chatList.appendChild(globalLi);
+
   users.forEach((user) => {
     if (user === currentUser) return;
 
@@ -129,14 +188,6 @@ function renderUserList(users) {
 
     chatList.appendChild(li);
   });
-
-  const remainingUsers = users.filter(user => user !== currentUser);
-
-  if (!remainingUsers.includes(currentChat) && remainingUsers.length > 0) {
-    currentChat = remainingUsers[0];
-    document.getElementById("chatHeader").innerText = currentChat;
-    renderMessages();
-  }
 }
 
 function selectChat(element) {
@@ -144,6 +195,7 @@ function selectChat(element) {
   currentChat = name;
 
   document.getElementById("chatHeader").innerText = name;
+  document.getElementById("typingIndicator").innerText = "";
 
   document.querySelectorAll("#chatList .list-group-item").forEach(item => {
     item.classList.remove("active");
@@ -151,10 +203,16 @@ function selectChat(element) {
 
   element.classList.add("active");
 
-  socket.send(JSON.stringify({
-    type: "chat_history",
-    user: name
-  }));
+  if (name === "Global Chat") {
+    socket.send(JSON.stringify({
+      type: "global_history"
+    }));
+  } else {
+    socket.send(JSON.stringify({
+      type: "chat_history",
+      user: name
+    }));
+  }
 }
 
 function renderMessages() {
@@ -179,17 +237,24 @@ function sendMessage() {
 
   if (text === "" || !currentChat) return;
 
-  socket.send(JSON.stringify({
-    type: "private_message",
-    to: currentChat,
-    text: text
-  }));
+  if (currentChat === "Global Chat") {
+    socket.send(JSON.stringify({
+      type: "global_message",
+      text: text
+    }));
+  } else {
+    socket.send(JSON.stringify({
+      type: "private_message",
+      to: currentChat,
+      text: text
+    }));
+  }
 
   input.value = "";
 }
 
 function sendTyping() {
-  if (!currentChat) return;
+  if (!currentChat || currentChat === "Global Chat") return;
 
   socket.send(JSON.stringify({
     type: "typing",
@@ -222,6 +287,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  document.getElementById("chatHeader").innerText = currentChat;
+  document.getElementById("chatHeader").innerText = "Global Chat";
   renderMessages();
 });
