@@ -4,6 +4,9 @@ let currentChat = "Global Chat";
 let messages = {
   "Global Chat": []
 };
+let unreadCounts = {
+  "Global Chat": 0
+};
 
 function connectSocket() {
   socket = new WebSocket("ws://localhost:3000");
@@ -32,6 +35,7 @@ function connectSocket() {
         break;
 
       case "active_users":
+        lastActiveUsers = data.users;
         renderUserList(data.users);
 
         const otherUsers = data.users.filter(u => u !== currentUser);
@@ -62,6 +66,9 @@ function connectSocket() {
 
         if (currentChat === chatPartner) {
           renderMessages();
+        } else {
+          unreadCounts[chatPartner] = (unreadCounts[chatPartner] || 0) + 1;
+          renderUserList(lastActiveUsers);
         }
 
         break;
@@ -81,6 +88,9 @@ function connectSocket() {
 
         if (currentChat === "Global Chat") {
           renderMessages();
+        } else {
+          unreadCounts["Global Chat"] = (unreadCounts["Global Chat"] || 0) + 1;
+          renderUserList(lastActiveUsers);
         }
 
         break;
@@ -151,6 +161,16 @@ function login() {
   }));
 }
 
+function getUnreadBadge(chatName) {
+  const count = unreadCounts[chatName] || 0;
+
+  if (count === 0) {
+    return "";
+  }
+
+  return ` <span class="badge bg-danger rounded-pill">${count}</span>`;
+}
+
 function renderUserList(users) {
   const chatList = document.getElementById("chatList");
   chatList.innerHTML = "";
@@ -158,7 +178,7 @@ function renderUserList(users) {
   const globalLi = document.createElement("li");
   globalLi.className = "list-group-item";
   globalLi.setAttribute("data-name", "Global Chat");
-  globalLi.innerText = "Global Chat";
+  globalLi.innerHTML = `Global Chat${getUnreadBadge("Global Chat")}`;
 
   if (currentChat === "Global Chat") {
     globalLi.classList.add("active");
@@ -176,7 +196,7 @@ function renderUserList(users) {
     const li = document.createElement("li");
     li.className = "list-group-item";
     li.setAttribute("data-name", user);
-    li.innerText = user;
+    li.innerHTML = `${user}${getUnreadBadge(user)}`;
 
     if (user === currentChat) {
       li.classList.add("active");
@@ -193,6 +213,7 @@ function renderUserList(users) {
 function selectChat(element) {
   const name = element.getAttribute("data-name");
   currentChat = name;
+  unreadCounts[name] = 0;
 
   document.getElementById("chatHeader").innerText = name;
   document.getElementById("typingIndicator").innerText = "";
@@ -201,7 +222,7 @@ function selectChat(element) {
     item.classList.remove("active");
   });
 
-  element.classList.add("active");
+  renderUserList(lastActiveUsers);
 
   if (name === "Global Chat") {
     socket.send(JSON.stringify({
