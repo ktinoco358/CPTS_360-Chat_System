@@ -18,6 +18,16 @@ CREATE TABLE IF NOT EXISTS messages (
 )
 `).run();
 
+// Create global messages table if it doesn't exist
+db.prepare(`
+CREATE TABLE IF NOT EXISTS global_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  sender TEXT,
+  message TEXT,
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+)
+`).run();
+
 const PORT = 3000;
 
 // Serve index.html, style.css, style.js
@@ -64,6 +74,12 @@ function broadcastActiveUsers() {
       type: "active_users",
       users: usernames
     });
+  }
+}
+
+function broadcastGlobalMessage(messageObj) {
+  for (const [, ws] of clients.entries()) {
+    sendJSON(ws, messageObj);
   }
 }
 
@@ -186,6 +202,40 @@ wss.on("connection", (ws) => {
         break;
       }
 
+      case "global_message": {
+        if (!ws.username) {
+          sendJSON(ws, {
+            type: "error",
+            message: "Login first"
+          });
+          return;
+        }
+
+        const text = (data.text || "").trim();
+
+        if (!text) {
+          sendJSON(ws, {
+            type: "error",
+            message: "Message cannot be empty"
+          });
+          return;
+        }
+
+        db.prepare(`
+          INSERT INTO global_messages (sender, message)
+          VALUES (?, ?)
+        `).run(ws.username, text);
+
+        const messageObj = {
+          type: "global_message",
+          from: ws.username,
+          text: text
+        };
+
+        broadcastGlobalMessage(messageObj);
+        break;
+      }
+
       case "typing": {
         if (!ws.username) return;
 
@@ -214,6 +264,28 @@ wss.on("connection", (ws) => {
         sendJSON(ws, {
           type: "chat_history",
           user: user2,
+          messages: rows
+        });
+
+        break;
+      }
+
+      case "global_history": {
+        if (!ws.username) {
+          sendJSON(ws, {
+            type: "error",
+            message: "Login first"
+          });
+          return;
+        }
+
+        const rows = db.prepare(`
+          SELECT * FROM global_messages
+          ORDER BY timestamp ASC
+        `).all();
+
+        sendJSON(ws, {
+          type: "global_history",
           messages: rows
         });
 
