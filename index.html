@@ -35,11 +35,22 @@
         <div class="col-3 sidebar bg-light">
             <h5 class="p-3 border-bottom">Temu Chat <br>
                 <small id="currentUserDisplay"> </small>
-
             </h5>
-            <ul class="list-group list-group-flush" id="chatList">
-                <li class="list-group-item active" data-name="Global Chat">Global Chat</li>
-            </ul>
+            <!-- Users -->
+            <div class="p-2 border-top">
+                <strong>Select Users To Chat With!</strong>
+                <ul class="list-group" id="userList"></ul>
+            </div>
+            <!-- Chats -->
+            <div class="p-2">
+                <strong>Chats</strong>
+                <ul class="list-group mb-3" id="chatList">
+                    <li class="list-group-item active" data-name="Global Chat">
+                        Global Chat
+                    </li>
+                </ul>
+            </div>
+
         </div>
 
         <!-- Chat Area -->

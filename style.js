@@ -35,19 +35,11 @@ function connectSocket() {
         break;
 
       case "active_users":
-        lastActiveUsers = data.users;
-        renderUserList(data.users);
+        lastActiveUsers = [];
 
-        const otherUsers = data.users.filter(u => u !== currentUser);
+        renderUserList(data.users); // chats
+        renderUsers(data.users);    // new users
 
-        if (otherUsers.length > 0) {
-          currentChat = otherUsers[0];
-          
-          socket.send(JSON.stringify({
-          type: "chat_history",
-          user: currentChat
-        }));
-        }
 
         break;
 
@@ -190,8 +182,8 @@ function renderUserList(users) {
 
   chatList.appendChild(globalLi);
 
-  users.forEach((user) => {
-    if (user === currentUser) return;
+Object.keys(messages).forEach((user) => {
+    if (user === "Global Chat") return;
 
     const li = document.createElement("li");
     li.className = "list-group-item";
@@ -311,3 +303,45 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("chatHeader").innerText = "Global Chat";
   renderMessages();
 });
+
+function renderUsers(users) {
+  const userList = document.getElementById("userList");
+  userList.innerHTML = "";
+
+  users.forEach(user => {
+    if (user === currentUser) return;
+
+    const li = document.createElement("li");
+    li.className = "list-group-item";
+    li.innerText = user;
+
+    li.addEventListener("click", () => {
+      startChat(user);
+    });
+
+    userList.appendChild(li);
+  });
+}
+
+function startChat(user) {
+  if (!messages[user]) {
+    messages[user] = [];
+  }
+  if(!unreadCounts[user])
+  {
+    unreadCounts[user] = 0;
+  }
+
+  currentChat = user;
+  unreadCounts[user] = 0;
+
+  document.getElementById("chatHeader").innerText = user;
+
+  socket.send(JSON.stringify({
+    type: "chat_history",
+    user: user
+  }));
+
+  renderMessages();
+  renderUserList(lastActiveUsers);
+}
