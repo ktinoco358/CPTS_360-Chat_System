@@ -15,6 +15,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Smooch+Sans:wght@100..900&display=swap" rel="stylesheet">
 
+<link href="https://fonts.googleapis.com/css2?family=Schoolbell&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@100..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=McLaren&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
@@ -23,7 +28,11 @@
 <div id="loginPage">
     <div class="TEMUCHAT_INFO">
         <h1>TEMU CHAT</h1>
-        <h3>chat w/<br>friends<br>online</h3>
+        <h3>
+             chat w/<br>
+             friends<br>
+            <img src="assets/img/logo2.png" class="inline-img">
+            online</h3>
     </div>
 
 
@@ -35,11 +44,12 @@
             <input type="text" class="form-control" id="usernameInput" placeholder="Username">
             <input type="text" class="form-control" id="passwordInput" placeholder="Password">
             <button class="btn btn-primary" id="loginBtn">Login</button>
-            <button class="btn btn-secondary" onclick="register()">Sign Up</button>
+            <!-- <button class="btn btn-secondary" onclick="register()">Sign Up</button> -->
         </div>
 
         <div class="NewUserGroup">
-            <p>Don't have an account? Sign Up</p>
+            <p>Don't have an account? 
+                <button class="btn btn-link p-0" onclick="register()">Sign Up</button> </p>
         </div>
     </div>
 </div>

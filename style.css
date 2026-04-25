@@ -2,12 +2,17 @@
 body {
     height: 100vh;
     overflow: hidden;
-    font-family: "Mulish", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 200;
+    /* font-family: "Mulish", sans-serif; */
+    /* font-family: "Playpen Sans", cursive; */
+
+    font-family: "McLaren", sans-serif;
+
+
+    /* font-optical-sizing: auto; */
+    font-weight: 400;
     font-style: normal;
     background:#141414;
-    color: #45508E;
+    color: #7a9d58;
 }
 
 /* Sidebar */
@@ -18,8 +23,8 @@ body {
 }
 
 .list-group-item.active {
-    background-color: #45508E;  /* your color */
-    border-color: #45508E;
+    background-color: #7a9d58;
+    border-color: #7a9d58;
     color: white;
 }
 
@@ -56,6 +61,32 @@ body {
     text-align: center;
     min-height: 100vh;
 
+}
+
+.TEMUCHAT_INFO h1 {
+    font-size: 92px;
+}
+
+.TEMUCHAT_INFO h3 {
+    font-size: 48px;
+    font-family: "Playpen Sans", cursive;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    transform: skew(7deg);
+    letter-spacing: 2px;
+    color: #e3d87e;
+
+}
+
+.signInInfo p {
+    color: #e3d87e;
+
+}
+
+
+.inline-img {
+    height: 1.5em;
 }
 
 .signInInfo {  
@@ -99,9 +130,15 @@ body {
     margin-top: 10px;
 }
 
+.NewUserGroup .btn-link {
+    color:#e3d87e;
+    text-decoration: none;
+}
 
-
-
+.NewUserGroup .btn-link:hover {
+    color: #ded068;
+    text-decoration: underline; 
+}
 
 
 
@@ -150,16 +187,16 @@ body {
 
 .input-group input:focus {
     box-shadow: none;
-    border-color: #45508e;
+    border-color: #7a9d58;
 }
 
 .btn-primary {
-    background-color: #45508e;
+    background-color: #7a9d58;
     border: none;
 }
 
 .btn-primary:hover {
-    background-color: #45508e;
+    background-color: #7a9d58;
 }
 
 .badge {
