@@ -12,9 +12,15 @@ body {
 
 /* Sidebar */
 .sidebar {
-   
+    background: #141414;
     height: 100vh;
     overflow-y: auto;
+}
+
+.list-group-item.active {
+    background-color: #45508E;  /* your color */
+    border-color: #45508E;
+    color: white;
 }
 
 .list-group-item {
@@ -72,8 +78,6 @@ body {
     flex-direction: column;
     justify-content: center;
     gap: 10px; */
-
-
 }
 
 
@@ -106,7 +110,7 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: #ffffff; 
+    background-color: #141414; 
 }
 
 .messages {
@@ -123,37 +127,59 @@ body {
     margin-bottom: 10px;
 }
 
-.sent {
-    background-color: #0d6efd; /* Bootstrap primary */
+#messageInput::placeholder {
     color: white;
+}
+
+.sent {
+    background-color: white; /* Bootstrap primary FIRST ONE */ 
+    color: #1f1f1f;
     margin-left: auto;
 }
 
 .received {
-    background-color: #e9ecef; /* light gray */
-    color: black;
+    background-color: #1f1f1f; /* light gray */
+    color: white;
 }
 
 /* Input */
 .input-group input {
-    background-color: #ffffff;
-    border: 1px solid #ced4da; /* subtle border */
+    background-color:#1f1f1f;
+    border: 1px solid #1f1f1f; /* subtle border */
 }
 
 .input-group input:focus {
     box-shadow: none;
-    border-color: #0d6efd;
+    border-color: #45508e;
 }
 
 .btn-primary {
-    background-color: #0d6efd;
+    background-color: #45508e;
     border: none;
 }
 
 .btn-primary:hover {
-    background-color: #0b5ed7;
+    background-color: #45508e;
 }
 
 .badge {
     float: right;
+}
+
+/* Custom colors */
+.sidebarScheme{
+    background-color: #1f1f1f;
+    color: white;
+}
+
+.charAreaScheme{
+    background-color: #181818;
+    color: white;
+}
+
+.inputAreaScheme{
+    background: #141414;
+    color: white;
+    border: #141414;
+
 }
