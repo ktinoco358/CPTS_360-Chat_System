@@ -214,7 +214,7 @@ wss.on("connection", (ws) => {
         `).run(username,securedPassword);
 
         sendJSON(ws, {
-          type: "login_success",
+          type: "register_success",
           message: "Account created! Please login"
         });
 

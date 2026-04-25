@@ -34,7 +34,7 @@ function connectSocket() {
         }));
         break;
 
-      case "login_success":
+      case "register_success":
         alert(data.message);
         break;
 
