@@ -9,11 +9,35 @@
 
 <!-- Your CSS -->
 <link rel="stylesheet" href="style.css">
+
+<!-- Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Smooch+Sans:wght@100..900&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
 
-<div id="loginSection" class="container mt-3">
+<div id="loginPage">
+    <div class="signInInfo"> 
+        <h2>Login BACK IN</h4>
+        <p>Welcome back please login to your account</p>
+
+        <div class="inputGroup">
+            <input type="text" class="form-control" id="usernameInput" placeholder="Username">
+            <input type="text" class="form-control" id="passwordInput" placeholder="Password">
+            <button class="btn btn-primary" id="loginBtn">Login</button>
+            <button class="btn btn-secondary" onclick="register()">Sign Up</button>
+        </div>
+
+        <div class="NewUserGroup">
+            <p>Don't have an account? Sign Up</p>
+        </div>
+    </div>
+</div>
+
+<!-- <div id="loginSection" class="container mt-3">
   <div class="row justify-content-center">
     <div class="col-6">
       <h4 class="mb-3">Login</h4>
@@ -23,7 +47,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <div id="chatSection" style="display: none;">
 
@@ -79,6 +103,7 @@
     </div>
 </div>
 </div>
+
 <!-- Your JS -->
 <script src="style.js"></script>
 

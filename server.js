@@ -4,6 +4,7 @@ const path = require("path");
 const WebSocket = require("ws");
 // Data base initialization
 const Database = require("better-sqlite3");
+const bcrypt = require("bcrypt");
 //const { use } = require("react");
 const db = new Database("chat.db");
 
@@ -25,6 +26,15 @@ CREATE TABLE IF NOT EXISTS global_messages (
   sender TEXT,
   message TEXT,
   timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+)
+`).run();
+
+// Password for user
+db.prepare(`
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE,
+  password TEXT
 )
 `).run();
 
@@ -102,14 +112,36 @@ wss.on("connection", (ws) => {
     switch (data.type) {
       case "login": {
         const username = (data.username || "").trim();
+        const password = (data.password || "").trim();
 
-        if (!username) {
+        if (!username || !password) {
           sendJSON(ws, {
             type: "error",
-            message: "Username is required"
+            message: "Username and password are required"
           });
           return;
         }
+
+        const user = db.prepare("SELECT * FROM users WHERE username = ?").get(username);
+
+        if (!user) {
+          sendJSON(ws, {
+            type: "error",
+            message: "User not found"
+          });
+          return;
+        }
+
+        const valid = bcrypt.compareSync(password, user.password);
+
+        if(!valid) {
+          sendJSON(ws, {
+            type: "error",
+            message: "Incorrect Password"
+          });
+          return
+        }
+
 
         if (clients.has(username)) {
           sendJSON(ws, {
@@ -150,6 +182,44 @@ wss.on("connection", (ws) => {
 
         broadcastActiveUsers();
         break;
+      }
+
+      case "register": {
+        const username = (data.username || "").trim();
+        const password = (data.password || "").trim();
+
+        if (!username || !password) {
+          sendJSON(ws, {
+            type: "error",
+            message: "Enter username and password"
+          });
+          return;
+        }
+
+        const existing = db.prepare("SELECT * FROM users WHERE username = ?").get(username);
+
+        if(existing) {
+          sendJSON(ws, {
+            type: "error",
+            message: "Username already exists, please type new username"
+          });
+          return;
+        }
+
+        const securedPassword = bcrypt.hashSync(password, 10);
+
+        db.prepare(`
+          INSERT INTO users (username, password)
+          VALUES (?, ?)
+        `).run(username,securedPassword);
+
+        sendJSON(ws, {
+          type: "login_success",
+          message: "Account created! Please login"
+        });
+
+        break;
+
       }
 
       case "private_message": {

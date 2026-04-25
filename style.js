@@ -22,7 +22,7 @@ function connectSocket() {
 
       case "login_success":
         currentUser = data.username;
-        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("loginPage").style.display = "none";
         document.getElementById("chatSection").style.display = "block";
         document.getElementById("currentUserDisplay").innerText = "Welcome, " + currentUser;
 
@@ -32,6 +32,10 @@ function connectSocket() {
         socket.send(JSON.stringify({
           type: "global_history"
         }));
+        break;
+
+      case "login_success":
+        alert(data.message);
         break;
 
       case "active_users":
@@ -144,13 +148,29 @@ function connectSocket() {
 
 function login() {
   const username = document.getElementById("usernameInput").value.trim();
+  const password = document.getElementById("passwordInput").value.trim();
 
-  if (username === "") return;
+  if (!username || !password) return;
 
   socket.send(JSON.stringify({
     type: "login",
-    username: username
+    username: username,
+    password: password
   }));
+}
+
+function register() {
+  const username = document.getElementById("usernameInput").value.trim();
+  const password = document.getElementById("passwordInput").value.trim();
+
+  if (!username || !password) return;
+
+  socket.send(JSON.stringify({
+    type: "register",
+    username: username,
+    password: password
+  }));
+
 }
 
 function getUnreadBadge(chatName) {

@@ -2,6 +2,11 @@
 body {
     height: 100vh;
     overflow: hidden;
+    font-family: "Mulish", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+    color:white;
 }
 
 /* Sidebar */
@@ -15,12 +20,46 @@ body {
     cursor: pointer;
 }
 
+/* Sign In Page */
+#loginPage {
+    background-image: url("assets/img/frontPage-Background5.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;  
+    align-items: center;    
+}
+
+.signInInfo {  
+    /* display: flex; */
+    background: rgba(255, 255, 255, 0.1);
+
+    width: 33vw;  
+    height: 33vh; 
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    padding: 20px;
+    backdrop-filter: blur(10px); 
+  
+
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+
+
+}
+
 /* Chat Area */
 .chat-area {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: #ffffff; /* clean white */
+    background-color: #ffffff; 
 }
 
 .messages {
