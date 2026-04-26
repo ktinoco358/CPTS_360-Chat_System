@@ -222,6 +222,11 @@ wss.on("connection", (ws) => {
 
       }
 
+      case "register_success":
+        alert(data.message);
+        closeSignup();
+        break;
+
       case "private_message": {
         if (!ws.username) {
           sendJSON(ws, {

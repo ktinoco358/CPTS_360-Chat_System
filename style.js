@@ -8,6 +8,8 @@ let unreadCounts = {
   "Global Chat": 0
 };
 
+let isLoginMode = true;
+
 function connectSocket() {
   socket = new WebSocket("ws://localhost:3000");
 
@@ -300,16 +302,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   connectSocket();
 
-  const loginBtn = document.getElementById("loginBtn");
-  const sendBtn = document.getElementById("sendBtn");
+  document.getElementById("loginBtn").addEventListener("click", login);
+  document.getElementById("registerBtn").addEventListener("click", register);
+  document.getElementById("toggleBtn").addEventListener("click", toggleMode);
 
-  if (loginBtn) {
-    loginBtn.addEventListener("click", login);
-  }
-
-  if (sendBtn) {
-    sendBtn.addEventListener("click", sendMessage);
-  }
+  document.getElementById("sendBtn").addEventListener("click", sendMessage);
 
   const input = document.getElementById("messageInput");
   input.addEventListener("keydown", function (e) {
@@ -321,6 +318,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("chatHeader").innerText = "Global Chat";
+
+  document.getElementById("registerBtn").style.display = "none";
+
   renderMessages();
 });
 
@@ -332,8 +332,16 @@ function renderUsers(users) {
     if (user === currentUser) return;
 
     const li = document.createElement("li");
-    li.className = "list-group-item";
-    li.innerText = user;
+    li.className = "list-group-item user-item";
+
+    const avatar = user.charAt(0).toUpperCase();
+
+    li.innerHTML = `
+      <div class="user-row">
+        <div class="avatar-circle">${avatar}</div>
+        <span class="username-text">${user}</span>
+      </div>
+    `;
 
     li.addEventListener("click", () => {
       startChat(user);
@@ -364,4 +372,33 @@ function startChat(user) {
 
   renderMessages();
   renderUserList(lastActiveUsers);
+}
+
+function toggleMode() {
+  isLoginMode = !isLoginMode;
+
+  document.getElementById("authBox").classList.toggle("registerMode", !isLoginMode);
+
+  const loginBtn = document.getElementById("loginBtn");
+  const registerBtn = document.getElementById("registerBtn");
+  const toggleBtn = document.getElementById("toggleBtn");
+  const title = document.getElementById("formTitle");
+  const toggleText = document.getElementById("toggleText");
+
+
+  if (isLoginMode) {
+    title.innerText = "Login";
+    toggleText.innerText = "Don't have an account?";
+    toggleBtn.innerText = "Sign Up";
+
+    loginBtn.style.display = "block";
+    registerBtn.style.display = "none";
+  } else {
+    title.innerText = "Sign Up";
+    toggleText.innerText = "Already have an account?";
+    toggleBtn.innerText = "Login";
+
+    loginBtn.style.display = "none";
+    registerBtn.style.display = "block";
+  }
 }

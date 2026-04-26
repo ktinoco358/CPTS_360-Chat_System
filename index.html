@@ -37,34 +37,29 @@
 
 
 
-    <div class="signInInfo"> 
-        <h2>Login</h2>
+    <div class="signInInfo"  id="authBox"> 
+        <h2 id="formTitle">Login</h2>
 
         <div class="inputGroup">
             <input type="text" class="form-control" id="usernameInput" placeholder="Username">
-            <input type="text" class="form-control" id="passwordInput" placeholder="Password">
+            <input type="password" class="form-control" id="passwordInput" placeholder="Password">
+            
             <button class="btn btn-primary" id="loginBtn">Login</button>
-            <!-- <button class="btn btn-secondary" onclick="register()">Sign Up</button> -->
+            <button class="btn btn-success" id="registerBtn" style="display:none;">Sign Up</button>
+
         </div>
+
 
         <div class="NewUserGroup">
-            <p>Don't have an account? 
-                <button class="btn btn-link p-0" onclick="register()">Sign Up</button> </p>
+            <p>
+                <span id="toggleText">Don't have an account?</span>
+                <button class="btn btn-link p-0" id="toggleBtn">Sign Up</button>
+              </p>
         </div>
-    </div>
-</div>
 
-<!-- <div id="loginSection" class="container mt-3">
-  <div class="row justify-content-center">
-    <div class="col-6">
-      <h4 class="mb-3">Login</h4>
-      <div class="input-group">
-        <input type="text" id="usernameInput" class="form-control" placeholder="Enter username">
-        <button class="btn btn-primary" id="loginBtn">Login</button>
-      </div>
     </div>
-  </div>
-</div> -->
+
+</div>
 
 <div id="chatSection" style="display: none;">
 
@@ -74,12 +69,16 @@
 
         <!-- Sidebar -->
         <div class="col-3 sidebar sidebarScheme">
-            <h5 class="p-3">Temu Chat <br>
-                <small id="currentUserDisplay"> </small>
+            <h5 class="p-3">
+
+            <img src="assets/img/logo2.png" class="inline-img">
+            
+            Temu Chat <br>
+                <!-- <small id="currentUserDisplay"> </small> -->
             </h5>
             <!-- Users -->
             <div class="p-2">
-                <strong>Select Users To Chat With!</strong>
+                <strong>Active Users</strong>
                 <ul class="list-group" id="userList"></ul>
             </div>
             <!-- Chats -->
@@ -100,7 +99,7 @@
             <!-- Header -->
             <div class="p-3 inputAreaScheme">
 
-            <h5 id="chatHeader">Global Chat</h5>
+            <h5 id="chatHeader"></h5>
             <small id="typingIndicator" class="text-muted"></small>
 
             </div>

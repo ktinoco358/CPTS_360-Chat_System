@@ -1,66 +1,33 @@
-/* Make body full height */
 body {
     height: 100vh;
     overflow: hidden;
-    /* font-family: "Mulish", sans-serif; */
-    /* font-family: "Playpen Sans", cursive; */
-
     font-family: "McLaren", sans-serif;
-
-
-    /* font-optical-sizing: auto; */
     font-weight: 400;
     font-style: normal;
     background:#141414;
     color: #7a9d58;
 }
 
-/* Sidebar */
-.sidebar {
-    background: #141414;
-    height: 100vh;
-    overflow-y: auto;
-}
-
-.list-group-item.active {
-    background-color: #7a9d58;
-    border-color: #7a9d58;
-    color: white;
-}
-
-.list-group-item {
-    cursor: pointer;
-}
-
 /* Sign In Page */
 #loginPage {
-    /* background-image: url("assets/img/frontPage-Background5.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed; */
-
     min-height: 100vh;
     margin: 0;
     display: flex;
     justify-content: center;  
     align-items: center;    
     display: flex;
-    /* height: 100vh; */
 }
 
 .TEMUCHAT_INFO {
     flex: 2;
     background: #0A0A0A;
     color: white;
-
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
     text-align: center;
     min-height: 100vh;
-
 }
 
 .TEMUCHAT_INFO h1 {
@@ -76,14 +43,11 @@ body {
     transform: skew(7deg);
     letter-spacing: 2px;
     color: #e3d87e;
-
 }
 
 .signInInfo p {
     color: #e3d87e;
-
 }
-
 
 .inline-img {
     height: 1.5em;
@@ -95,22 +59,7 @@ body {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    /* display: flex;
-    background: rgba(255, 255, 255, 0.1);
-
-    width: 33vw;  
-    height: 33vh; 
-    border-radius: 10px;
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    padding: 20px;
-    backdrop-filter: blur(10px); 
-  
-
-    flex-direction: column;
-    justify-content: center;
-    gap: 10px; */
 }
-
 
 .inputGroup {
     display: flex;
@@ -119,6 +68,16 @@ body {
     width: 250px;
 }
 
+.input-group input:focus {
+    background-color: #1f1f1f;  /* keep same as normal */
+    color: white;               /* keep text readable */
+    box-shadow: none;
+    border-color: #7a9d58;
+}
+
+.input-group input {
+    color: white;
+}
 
 .signInInfo h2 {
     text-align: center;
@@ -140,7 +99,10 @@ body {
     text-decoration: underline; 
 }
 
-
+.sidebar h5 {
+    font-size: 36px;
+    color: #ded068;
+}
 
 /* Chat Area */
 .chat-area {
@@ -187,20 +149,44 @@ body {
 
 .input-group input:focus {
     box-shadow: none;
-    border-color: #7a9d58;
+    border-color: #1f1f1f;
 }
 
 .btn-primary {
-    background-color: #7a9d58;
+    background-color: #e3d87e;
+    color: #1f1f1f;
     border: none;
 }
 
-.btn-primary:hover {
-    background-color: #7a9d58;
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+    background-color: #e3d87e !important;
 }
+
 
 .badge {
     float: right;
+}
+
+.signupHidden {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.4s ease;
+    width: 250px;
+}
+
+.signupVisible {
+    max-height: 300px;
+    opacity: 1;
+    margin-top: 15px;
+}
+
+
+.p-2 strong{
+    font-size: 16px;
 }
 
 /* Custom colors */
@@ -219,4 +205,117 @@ body {
     color: white;
     border: #141414;
 
+}
+
+/* toggle titles */
+
+#authBox.signInInfo h2 {
+    color: #7a9d58;
+}
+
+#authBox.registerMode h2 {
+    color: #e3d87e
+}
+
+/* toggle buttons */
+#authBox.signInInfo .btn-primary {
+    background-color:#7a9d58 !important;
+    color: white;
+    border-color: #7a9d58 !important;
+}
+
+#authBox.registerMode .btn-success {
+    background-color: #e3d87e !important;
+    color: white;
+    border-color: #e3d87e !important;
+}
+
+/* toggle links */
+#authBox.signInInfo .btn-link {
+    color: #e3d87e;
+}
+
+#authBox.registerMode .btn-link {
+    color: #7a9d58;
+}
+
+/* toggle text */
+#authBox.signInInfo  #toggleText  {
+    color: #e3d87e;
+}
+
+#authBox.registerMode  #toggleText  {
+    color: #7a9d58;
+}
+
+/* Avatar + name */
+.user-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.user-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #7a9d58;
+    color: #141414;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.username-text {
+    color: #96979f
+}
+
+
+/* Sidebar */
+.sidebar {
+    background: #141414;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.list-group-item.active {
+    background-color: #7a9d58;
+    border-color: #7a9d58;
+    color: white;
+}
+
+.list-group-item {
+    cursor: pointer;
+}
+
+#userList .list-group-item {
+    background-color: #1f1f1f;
+    color: #7a9d58;
+    border: none;
+}
+
+
+#chatList .list-group-item {
+    background-color: #1f1f1f;
+    color: #96979f;
+    border: none;
+}
+#chatList .list-group-item.active {
+    background-color: #2d2d30;
+    color: white;
+    border: none;
+}
+
+#chatList .list-group-item:hover {
+    background-color: #1c1c1f;
+    color: white;
 }
