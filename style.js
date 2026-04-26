@@ -10,6 +10,14 @@ let unreadCounts = {
 
 let isLoginMode = true;
 
+const avatarColors = [
+  "#97c48e",
+  "#edb67d",
+  "#ff9696",
+  "#497bed",
+  "#a383df"
+];
+
 function connectSocket() {
   socket = new WebSocket("ws://localhost:3000");
 
@@ -41,7 +49,7 @@ function connectSocket() {
         break;
 
       case "active_users":
-        lastActiveUsers = [];
+        lastActiveUsers = data.users;
 
         renderUserList(data.users); // chats
         renderUsers(data.users);    // new users
@@ -324,6 +332,18 @@ document.addEventListener("DOMContentLoaded", () => {
   renderMessages();
 });
 
+function getUserColor(username) {
+  let hash = 0;
+
+  for (let i = 0; i < username.length; i++) {
+    hash = username.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  const index = Math.abs(hash) % avatarColors.length;
+  return avatarColors[index];
+
+}
+
 function renderUsers(users) {
   const userList = document.getElementById("userList");
   userList.innerHTML = "";
@@ -338,7 +358,10 @@ function renderUsers(users) {
 
     li.innerHTML = `
       <div class="user-row">
-        <div class="avatar-circle">${avatar}</div>
+        <div class="avatar-circle" 
+            style="background-color: ${getUserColor(user)}">
+            ${avatar}
+        </div>
         <span class="username-text">${user}</span>
       </div>
     `;
