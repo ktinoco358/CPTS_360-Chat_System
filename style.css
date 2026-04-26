@@ -185,7 +185,6 @@ body {
     background-color: #e3d87e !important;
 }
 
-
 .badge {
     float: right;
 }
@@ -228,7 +227,6 @@ body {
 }
 
 /* toggle titles */
-
 #authBox.signInInfo h2 {
     color: #7a9d58;
 }
