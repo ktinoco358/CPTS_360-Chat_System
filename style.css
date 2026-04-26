@@ -8,6 +8,18 @@ body {
     color: #7a9d58;
 }
 
+.sidebar {
+    background: #141414;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.list-group-item.active {
+    background-color: #7a9d58;
+    border-color: #7a9d58;
+    color: white;
+}
+
 /* Sign In Page */
 #loginPage {
     min-height: 100vh;
@@ -279,24 +291,11 @@ body {
     color: #96979f
 }
 
-
-/* Sidebar */
-.sidebar {
-    background: #141414;
-    height: 100vh;
-    overflow-y: auto;
-}
-
-.list-group-item.active {
-    background-color: #7a9d58;
-    border-color: #7a9d58;
-    color: white;
-}
-
 .list-group-item {
     cursor: pointer;
 }
 
+/* Sidebar */
 #userList .list-group-item {
     background-color: #1f1f1f;
     color: #7a9d58;
