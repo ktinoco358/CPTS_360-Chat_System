@@ -14,6 +14,14 @@ body {
     overflow-y: auto;
 }
 
+#currentUserDisplay {
+    display: block;
+    color: #ede5ab;
+    font-size: 18px;
+    margin-top: 2px;
+    text-align: center;
+}
+
 .list-group-item.active {
     background-color: #7a9d58;
     border-color: #7a9d58;
